@@ -48,6 +48,7 @@ jobs:
         run: |
           python store_credit_rates.py
           python build_rates_api.py
+          cp index.html rates/index.html
 
       - name: Commit rate updates
         if: steps.schedule.outputs.run == 'true'
