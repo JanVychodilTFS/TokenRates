@@ -7,7 +7,7 @@ Static JSON history of OpenAI Work and Codex token-credit rates. The data is col
 Base URL: <https://janvychodiltfs.github.io/TokenRates/>
 
 - [Latest observed rate period](https://janvychodiltfs.github.io/TokenRates/latest.json)
-- [Rates for a calendar date](https://janvychodiltfs.github.io/TokenRates/YYYY-MM-DD.json) — replace `YYYY-MM-DD` with a date, for example [`2026-08-21.json`](https://janvychodiltfs.github.io/TokenRates/2026-08-21.json)
+- Rates for a calendar date: `/YYYY-MM-DD.json` — replace `YYYY-MM-DD` with a date, for example [`2026-08-21.json`](https://janvychodiltfs.github.io/TokenRates/2026-08-21.json)
 
 `latest.json` returns the newest recorded period. A dated endpoint returns the rate period that includes the requested date. Dates outside recorded history do not have an endpoint.
 
