@@ -35,20 +35,29 @@
     }
     h1 { margin: 0; font-size: clamp(2.3rem, 7vw, 4.5rem); letter-spacing: -.06em; }
     .intro { margin: 16px 0 32px; color: #cbd5e1; font-size: 1.08rem; line-height: 1.6; }
-    .endpoint {
-      display: block;
+    .api-panel {
       margin: 12px 0;
-      padding: 18px 20px;
       border: 1px solid rgba(148, 163, 184, .2);
       border-radius: 14px;
-      color: #f8fafc;
       background: rgba(2, 6, 23, .45);
-      text-decoration: none;
-      transition: border-color .18s ease, transform .18s ease, background .18s ease;
     }
-    .endpoint:hover { border-color: #a78bfa; background: rgba(76, 29, 149, .2); transform: translateY(-2px); }
+    .endpoint {
+      display: block;
+      padding: 18px 20px;
+      color: #f8fafc;
+      text-decoration: none;
+      transition: background .18s ease;
+    }
+    .endpoint:hover { background: rgba(76, 29, 149, .2); }
     .method { color: #a78bfa; font: 700 .78rem ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; }
     code { display: block; margin-top: 7px; font: .95rem ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+    .date-picker { margin: 0; padding: 18px 20px; border-top: 1px solid rgba(148, 163, 184, .2); }
+    .date-picker label { display: block; margin-bottom: 9px; color: #cbd5e1; font-size: .92rem; }
+    .date-controls { display: flex; gap: 10px; flex-wrap: wrap; }
+    input, button { min-height: 46px; border-radius: 10px; font: inherit; }
+    input { flex: 1 1 200px; border: 1px solid rgba(148, 163, 184, .35); padding: 0 13px; color: #f8fafc; background: rgba(2, 6, 23, .45); color-scheme: dark; }
+    button { border: 0; padding: 0 18px; color: #fff; background: #7c3aed; cursor: pointer; font-weight: 700; }
+    button:hover { background: #8b5cf6; }
     footer { margin-top: 30px; color: #94a3b8; font-size: .88rem; }
   </style>
 </head>
@@ -56,16 +65,31 @@
   <main>
     <p class="eyebrow">Static JSON API</p>
     <h1>TokenRates</h1>
-    <p class="intro">OpenAI Work and Codex token-credit rates, available as simple JSON files.</p>
-    <a class="endpoint" href="latest.json">
-      <span class="method">GET</span>
-      <code>/latest.json</code>
-    </a>
-    <a class="endpoint" href="2026-08-21.json">
-      <span class="method">GET</span>
-      <code>/YYYY-MM-DD.json</code>
-    </a>
-    <footer>Choose a calendar date to retrieve the matching observed rate period.</footer>
+    <p class="intro">OpenAI and Codex token-credit rates, available as simple JSON files.</p>
+    <section class="api-panel" aria-label="Rate API endpoints">
+      <a class="endpoint" href="latest.json">
+        <span class="method">GET</span>
+        <code>/latest.json</code>
+      </a>
+      <form class="date-picker" id="date-picker">
+        <label for="rate-date">Or choose a date</label>
+        <div class="date-controls">
+          <input id="rate-date" name="rate-date" type="date" min="2026-04-03" required>
+          <button type="submit">View rates</button>
+        </div>
+      </form>
+    </section>
   </main>
+  <script>
+    const form = document.querySelector("#date-picker");
+    const dateInput = document.querySelector("#rate-date");
+    dateInput.max = new Date().toISOString().slice(0, 10);
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!dateInput.value) return;
+      window.location.href = `${dateInput.value}.json`;
+    });
+  </script>
 </body>
 </html>
