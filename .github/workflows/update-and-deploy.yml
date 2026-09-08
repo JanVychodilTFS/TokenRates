@@ -2,9 +2,8 @@ name: Update and deploy rates API
 
 on:
   schedule:
-    # GitHub Actions schedules use UTC. This runs at minute five each hour and
-    # continues only during midnight in Europe/Prague, including DST changes.
-    - cron: "5 * * * *"
+    # GitHub Actions schedules use UTC. Runs once per day at 00:00 UTC.
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 permissions:
@@ -20,35 +19,21 @@ jobs:
   update-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Check Prague midnight
-        id: schedule
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$(TZ=Europe/Prague date +%H)" = "00" ]; then
-            echo "run=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "run=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Check out repository
-        if: steps.schedule.outputs.run == 'true'
         uses: actions/checkout@v5
 
       - name: Set up Python
-        if: steps.schedule.outputs.run == 'true'
         uses: actions/setup-python@v6
         with:
           python-version: "3.13"
 
       - name: Install dependencies
-        if: steps.schedule.outputs.run == 'true'
         run: python -m pip install -r requirements.txt
 
       - name: Fetch current rate history
-        if: steps.schedule.outputs.run == 'true'
         run: python store_credit_rates.py
 
       - name: Commit rate-history updates
-        if: steps.schedule.outputs.run == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -60,21 +45,17 @@ jobs:
           fi
 
       - name: Build static API for Pages
-        if: steps.schedule.outputs.run == 'true'
         run: |
           python build_rates_api.py
           cp index.html rates/index.html
 
       - name: Configure GitHub Pages
-        if: steps.schedule.outputs.run == 'true'
         uses: actions/configure-pages@v6.0.0
 
       - name: Upload Pages artifact
-        if: steps.schedule.outputs.run == 'true'
         uses: actions/upload-pages-artifact@v5
         with:
           path: rates
 
       - name: Deploy to GitHub Pages
-        if: steps.schedule.outputs.run == 'true'
         uses: actions/deploy-pages@v5
