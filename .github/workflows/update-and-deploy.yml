@@ -2,8 +2,8 @@ name: Update and deploy rates API
 
 on:
   schedule:
-    # GitHub Actions schedules use UTC. Runs once per day at 00:00 UTC.
-    - cron: "0 0 * * *"
+    # GitHub Actions schedules use UTC. Run at 00:17 UTC to avoid :00 scheduler load.
+    - cron: "17 0 * * *"
   workflow_dispatch:
 
 permissions:
