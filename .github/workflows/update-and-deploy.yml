@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  update-and-deploy:
+  update-and-upload:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -57,5 +57,10 @@ jobs:
         with:
           path: rates
 
+  deploy:
+    # A same-job lookup can miss a newly uploaded artifact (actions/deploy-pages#451).
+    needs: update-and-upload
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v5
